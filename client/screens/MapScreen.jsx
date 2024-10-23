@@ -1,11 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
-import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
+import {
+	View,
+	ActivityIndicator,
+	Dimensions,
+	StyleSheet,
+	Text
+} from 'react-native'
 import axios from 'axios'
+import ClusteredMapView from 'react-native-maps-super-cluster'
 import UserLocation from '../components/user_location'
+import { PROVIDER_DEFAULT, Marker } from 'react-native-maps'
 
 const { width, height } = Dimensions.get('window')
-
 const ASPECT_RATIO = width / height
 const LATITUDE_DELTA = 0.02
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
@@ -18,7 +24,6 @@ const INITIAL_POSITION = {
 
 const MapScreen = ({ navigation }) => {
 	const [parkingData, setParkingData] = useState([])
-	const [parkingCoordinates, setParkingCoordinate] = useState(null)
 	const [userLocation, setUserLocation] = useState(null)
 	const mapViewRef = useRef(null)
 	const [loading, setLoading] = useState(true)
@@ -31,9 +36,16 @@ const MapScreen = ({ navigation }) => {
 					if (
 						response.data &&
 						response.data.status === 'success' &&
-						response.data.data
+						Array.isArray(response.data.data)
 					) {
-						setParkingData(response.data.data)
+						const transformedData = response.data.data.map(item => ({
+							...item,
+							location: {
+								latitude: item.lat,
+								longitude: item.lon
+							}
+						}))
+						setParkingData(transformedData)
 					} else {
 						console.error('Unexpected response format:', response)
 					}
@@ -66,61 +78,72 @@ const MapScreen = ({ navigation }) => {
 		}
 	}
 
-	const handleParkingLocationUpdate = parking => {
-		if (
-			!parking ||
-			typeof parking.lat === 'undefined' ||
-			typeof parking.lon === 'undefined'
-		) {
-			console.error('Parking data is undefined or missing properties:', parking)
-			return
-		}
+	const renderMarker = item => (
+		<Marker
+			key={item.id}
+			coordinate={item.location}
+			title={item.name}
+			description={`Capacity: ${item.capacity}, Free: ${item.free}`}
+		/>
+	)
 
-		setParkingCoordinate(parking)
-		if (mapViewRef.current) {
-			mapViewRef.current.animateToRegion(
-				{
-					latitude: parking.lat,
-					longitude: parking.lon,
-					latitudeDelta: 0.005,
-					longitudeDelta: 0.005
-				},
-				1000
-			)
-		}
+	const renderCluster = (cluster, onPress) => {
+		const pointCount = cluster.pointCount
+		const coordinate = cluster.coordinate
+
+		return (
+			<Marker coordinate={coordinate} onPress={onPress}>
+				<View style={styles.clusterContainer}>
+					<Text style={styles.clusterText}>{pointCount}</Text>
+				</View>
+			</Marker>
+		)
 	}
 
 	if (loading) {
 		return (
-			<View className=" flex-1 justify-center items-center ">
+			<View className="flex-1 justify-center items-center">
 				<ActivityIndicator size="large" color="#363636" />
 			</View>
 		)
 	}
 
 	return (
-		<View className=" flex-1 ">
-			<MapView
-				style={StyleSheet.absoluteFillObject}
+		<View className="flex-1">
+			<ClusteredMapView
 				provider={PROVIDER_DEFAULT}
 				initialRegion={INITIAL_POSITION}
 				showsUserLocation={true}
 				ref={mapViewRef}
-			>
-				{parkingData.map((parking, index) => (
-					<Marker
-						key={index}
-						coordinate={{ latitude: parking.lat, longitude: parking.lon }}
-						title={parking.name}
-						description={`Capacity: ${parking.capacity}, Free: ${parking.free}`}
-					/>
-				))}
-			</MapView>
-			<View className=" top-[650px] left-80 ">
+				data={parkingData}
+				renderMarker={renderMarker}
+				renderCluster={renderCluster}
+			/>
+			<View className="top-[650px] left-80">
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
 			</View>
 		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	clusterContainer: {
+		width: 40,
+		height: 40,
+		padding: 6,
+		borderWidth: 1,
+		borderRadius: 20,
+		alignItems: 'center',
+		borderColor: '#65bc46',
+		justifyContent: 'center',
+		backgroundColor: '#73c04d'
+	},
+	clusterText: {
+		fontSize: 13,
+		color: '#fff',
+		fontWeight: '500',
+		textAlign: 'center'
+	}
+})
 
 export default MapScreen
