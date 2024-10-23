@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
-import MapView, { Marker, PROVIDER_DEFAULT, Region } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps'
 import axios from 'axios'
 import UserLocation from '../components/user_location'
-import SuperCluster from 'react-native-maps-super-cluster'
 
 const { width, height } = Dimensions.get('window')
 
@@ -109,7 +108,7 @@ const MapScreen = ({ navigation }) => {
 				ref={mapViewRef}
 			>
 				{parkingData.map((parking, index) => (
-					<SuperCluster
+					<Marker
 						key={index}
 						coordinate={{ latitude: parking.lat, longitude: parking.lon }}
 						title={parking.name}
