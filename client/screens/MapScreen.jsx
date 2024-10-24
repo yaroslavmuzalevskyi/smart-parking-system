@@ -4,7 +4,8 @@ import {
 	ActivityIndicator,
 	Dimensions,
 	StyleSheet,
-	Text
+	Text,
+	Image
 } from 'react-native'
 import axios from 'axios'
 import ClusteredMapView from 'react-native-maps-super-cluster'
@@ -80,11 +81,16 @@ const MapScreen = ({ navigation }) => {
 
 	const renderMarker = item => (
 		<Marker
-			key={item.id}
+			key={item.id || Math.random()}
 			coordinate={item.location}
 			title={item.name}
 			description={`Capacity: ${item.capacity}, Free: ${item.free}`}
-		/>
+		>
+			<Image
+				source={require('../../assets/icons/parking.png')}
+				className=" w-8 h-8 "
+			/>
+		</Marker>
 	)
 
 	const renderCluster = (cluster, onPress) => {
@@ -93,8 +99,10 @@ const MapScreen = ({ navigation }) => {
 
 		return (
 			<Marker coordinate={coordinate} onPress={onPress}>
-				<View style={styles.clusterContainer}>
-					<Text style={styles.clusterText}>{pointCount}</Text>
+				<View className=" w-10 h-10 p-2 border-2 rounded-3xl items-center justify-center border-black bg-black">
+					<Text className=" text-sm text-white font-medium text-center">
+						{pointCount}
+					</Text>
 				</View>
 			</Marker>
 		)
@@ -118,6 +126,7 @@ const MapScreen = ({ navigation }) => {
 				data={parkingData}
 				renderMarker={renderMarker}
 				renderCluster={renderCluster}
+				radius={50}
 			/>
 			<View className="top-[650px] left-80">
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
@@ -125,25 +134,5 @@ const MapScreen = ({ navigation }) => {
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	clusterContainer: {
-		width: 40,
-		height: 40,
-		padding: 6,
-		borderWidth: 1,
-		borderRadius: 20,
-		alignItems: 'center',
-		borderColor: '#65bc46',
-		justifyContent: 'center',
-		backgroundColor: '#73c04d'
-	},
-	clusterText: {
-		fontSize: 13,
-		color: '#fff',
-		fontWeight: '500',
-		textAlign: 'center'
-	}
-})
 
 export default MapScreen
