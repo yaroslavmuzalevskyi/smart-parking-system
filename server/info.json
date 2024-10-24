@@ -5,11 +5,11 @@
   },
   {
     "name": "Saint-Esprit",
-    "parking_free_places": "163"
+    "parking_free_places": "132"
   },
   {
     "name": "Knuedler",
-    "parking_free_places": "312"
+    "parking_free_places": "290"
   },
   {
     "name": "Monterey",
@@ -17,7 +17,7 @@
   },
   {
     "name": "Rond Point Schuman",
-    "parking_free_places": "193"
+    "parking_free_places": "208"
   },
   {
     "name": "Martyrs",
@@ -25,15 +25,15 @@
   },
   {
     "name": "Rocade",
-    "parking_free_places": "146"
+    "parking_free_places": "145"
   },
   {
     "name": "Fort Wedell",
-    "parking_free_places": "302"
+    "parking_free_places": "369"
   },
   {
     "name": "Fort Neipperg",
-    "parking_free_places": "342"
+    "parking_free_places": "317"
   },
   {
     "name": "Luxembourg Sud B",
@@ -53,7 +53,7 @@
   },
   {
     "name": "Erasme",
-    "parking_free_places": "269"
+    "parking_free_places": "270"
   },
   {
     "name": "Coque",
@@ -61,15 +61,15 @@
   },
   {
     "name": "Gare",
-    "parking_free_places": "394"
+    "parking_free_places": "503"
   },
   {
     "name": "Adenauer",
-    "parking_free_places": "397"
+    "parking_free_places": "393"
   },
   {
     "name": "Stade",
-    "parking_free_places": "389"
+    "parking_free_places": "394"
   },
   {
     "name": "Glacis",
@@ -89,11 +89,11 @@
   },
   {
     "name": "Kockelscheuer",
-    "parking_free_places": "523"
+    "parking_free_places": "520"
   },
   {
     "name": "Bouillon",
-    "parking_free_places": "2149"
+    "parking_free_places": "2144"
   },
   {
     "name": "Brasserie",
@@ -105,14 +105,14 @@
   },
   {
     "name": "Royal-Hamilius",
-    "parking_free_places": "375"
+    "parking_free_places": "338"
   },
   {
     "name": "Stade de Luxembourg",
-    "parking_free_places": "1430"
+    "parking_free_places": "1427"
   },
   {
     "name": "Campus Cents",
-    "parking_free_places": "27"
+    "parking_free_places": "25"
   }
 ]

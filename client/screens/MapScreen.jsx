@@ -8,9 +8,9 @@ import {
 	Image
 } from 'react-native'
 import axios from 'axios'
-import ClusteredMapView from 'react-native-maps-super-cluster'
+import MapView, { Marker } from 'react-native-maps' // Import MapView from react-native-maps
+import MapViewClustering from 'react-native-map-clustering' // Import clustering from react-native-map-clustering
 import UserLocation from '../components/UserLocation'
-import { PROVIDER_DEFAULT, Marker } from 'react-native-maps'
 
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height
@@ -30,26 +30,31 @@ const MapScreen = ({ navigation }) => {
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
+		const transformData = data => {
+			return data.map(item => ({
+				...item,
+				location: {
+					latitude: item.lat,
+					longitude: item.lon
+				}
+			}))
+		}
+
 		axios
 			.get('http://localhost:8080/info') // Replace with your actual IP or API URL
 			.then(
 				response => {
-					if (
-						response.data &&
-						response.data.status === 'success' &&
-						Array.isArray(response.data.data)
-					) {
-						const transformedData = response.data.data.map(item => ({
-							...item,
-							location: {
-								latitude: item.lat,
-								longitude: item.lon
-							}
-						}))
-						setParkingData(transformedData)
-					} else {
+					const data = response?.data?.data
+					const status = response?.data?.status
+
+					if (status !== 'success' || !Array.isArray(data)) {
 						console.error('Unexpected response format:', response)
+						setLoading(false)
+						return
 					}
+
+					const transformedData = transformData(data)
+					setParkingData(transformedData)
 					setLoading(false)
 				},
 				error => {
@@ -88,51 +93,54 @@ const MapScreen = ({ navigation }) => {
 		>
 			<Image
 				source={require('../../assets/icons/parking.png')}
-				className=" w-8 h-8 "
+				style={styles.markerImage} // Updated from className to style
 			/>
 		</Marker>
 	)
 
-	const renderCluster = (cluster, onPress) => {
-		const pointCount = cluster.pointCount
-		const coordinate = cluster.coordinate
-
-		return (
-			<Marker coordinate={coordinate} onPress={onPress}>
-				<View className=" w-10 h-10 p-2 border-2 rounded-3xl items-center justify-center border-black bg-black">
-					<Text className=" text-sm text-white font-medium text-center">
-						{pointCount}
-					</Text>
-				</View>
-			</Marker>
-		)
-	}
-
 	if (loading) {
 		return (
-			<View className="flex-1 justify-center items-center">
+			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color="#363636" />
 			</View>
 		)
 	}
 
 	return (
-		<View className="flex-1">
-			<ClusteredMapView
-				provider={PROVIDER_DEFAULT}
-				initialRegion={INITIAL_POSITION}
+		<View style={styles.container}>
+			<MapViewClustering
+				style={styles.map}
+				region={INITIAL_POSITION}
 				showsUserLocation={true}
 				ref={mapViewRef}
-				data={parkingData}
-				renderMarker={renderMarker}
-				renderCluster={renderCluster}
-				radius={50}
-			/>
-			<View className="top-[650px] left-80">
+			>
+				{parkingData.map(item => renderMarker(item))}
+			</MapViewClustering>
+
+			<View>
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
 			</View>
 		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1
+	},
+	map: {
+		...StyleSheet.absoluteFillObject
+	},
+	loadingContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	markerImage: {
+		width: 32,
+		height: 32,
+		resizeMode: 'contain'
+	}
+})
 
 export default MapScreen
