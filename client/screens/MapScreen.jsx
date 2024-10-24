@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import axios from 'axios'
 import ClusteredMapView from 'react-native-maps-super-cluster'
-import UserLocation from '../components/user_location'
+import UserLocation from '../components/UserLocation'
 import { PROVIDER_DEFAULT, Marker } from 'react-native-maps'
 
 const { width, height } = Dimensions.get('window')
