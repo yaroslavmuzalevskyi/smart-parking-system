@@ -4,7 +4,9 @@ import {
 	ActivityIndicator,
 	Dimensions,
 	StyleSheet,
-	Image
+	Image,
+	TouchableOpacity,
+	Animated
 } from 'react-native'
 import MapView, { Marker } from 'react-native-maps'
 import MapViewClustering from 'react-native-map-clustering'
@@ -27,11 +29,11 @@ const INITIAL_POSITION = {
 const MapScreen = ({ navigation }) => {
 	const [parkingData, setParkingData] = useState([])
 	const [userLocation, setUserLocation] = useState(null)
-	const mapViewRef = useRef(null)
 	const [loading, setLoading] = useState(true)
+	const [selectedParkingSpot, setSelectedParkingSpot] = useState(null)
+	const popupAnimation = useRef(new Animated.Value(0)).current
 
-	const route = useRoute()
-	const { selectedParking } = route.params || {}
+	const mapViewRef = useRef(null)
 
 	useEffect(() => {
 		const transformData = data => {
@@ -59,20 +61,41 @@ const MapScreen = ({ navigation }) => {
 		loadParkingData()
 	}, [])
 
+	useEffect(() => {
+		if (selectedParkingSpot) {
+			// Animate pop-up in
+			Animated.timing(popupAnimation, {
+				toValue: 50, // On-screen position
+				duration: 300,
+				useNativeDriver: true
+			}).start()
+		}
+	}, [selectedParkingSpot])
+
+	const closePopUp = () => {
+		Animated.timing(popupAnimation, {
+			toValue: 700, // Off-screen position
+			duration: 300,
+			useNativeDriver: true
+		}).start(() => {
+			setSelectedParkingSpot(null)
+		})
+	}
+
 	// Focus on selected parking when parameter changes
 	useEffect(() => {
-		if (selectedParking && mapViewRef.current) {
+		if (selectedParkingSpot && mapViewRef.current) {
 			mapViewRef.current.animateToRegion(
 				{
-					latitude: selectedParking.location.latitude,
-					longitude: selectedParking.location.longitude,
+					latitude: selectedParkingSpot.location.latitude,
+					longitude: selectedParkingSpot.location.longitude,
 					latitudeDelta: 0.01,
 					longitudeDelta: 0.01
 				},
 				1000
 			)
 		}
-	}, [selectedParking])
+	}, [selectedParkingSpot])
 
 	const handleUserLocationUpdate = location => {
 		if (!location) {
@@ -114,8 +137,7 @@ const MapScreen = ({ navigation }) => {
 					<Marker
 						key={item.id}
 						coordinate={item.location}
-						title={item.name}
-						description={`Capacity: ${item.capacity}, Free: ${item.free}`}
+						onPress={() => setSelectedParkingSpot(item)}
 					>
 						<Image
 							source={require('../../assets/icons/parking.png')}
@@ -128,10 +150,28 @@ const MapScreen = ({ navigation }) => {
 			<View className=" absolute top-[650px] left-80">
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
 			</View>
-
-			<View className=" top-[250px]">
-				<ParkingPopUp></ParkingPopUp>
-			</View>
+			{selectedParkingSpot && (
+				<>
+					<TouchableOpacity
+						className=" absolute top-0 left-0 right-0 bottom-0"
+						onPress={closePopUp}
+					/>
+					<Animated.View
+						className=" absolute bottom-0 w-full"
+						style={[
+							{
+								transform: [{ translateY: popupAnimation }]
+							}
+						]}
+					>
+						<ParkingPopUp
+							parkingData={selectedParkingSpot}
+							userLocation={userLocation}
+							selectedParking={selectedParkingSpot}
+						/>
+					</Animated.View>
+				</>
+			)}
 		</View>
 	)
 }
