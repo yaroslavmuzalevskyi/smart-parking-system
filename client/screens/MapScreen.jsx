@@ -4,17 +4,18 @@ import {
 	ActivityIndicator,
 	Dimensions,
 	StyleSheet,
-	Text,
 	Image
 } from 'react-native'
-import axios from 'axios'
-import MapView, { Marker } from 'react-native-maps' // Import MapView from react-native-maps
-import MapViewClustering from 'react-native-map-clustering' // Import clustering from react-native-map-clustering
+import MapView, { Marker } from 'react-native-maps'
+import MapViewClustering from 'react-native-map-clustering'
+import { useRoute } from '@react-navigation/native'
 import UserLocation from '../components/UserLocation'
+import { fetchParkingData } from '../util/parkingService'
+import ParkingPopUp from '../components/ParkingPopUp'
 
 const { width, height } = Dimensions.get('window')
 const ASPECT_RATIO = width / height
-const LATITUDE_DELTA = 0.02
+const LATITUDE_DELTA = 2
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 const INITIAL_POSITION = {
 	latitude: 49.611622,
@@ -29,6 +30,9 @@ const MapScreen = ({ navigation }) => {
 	const mapViewRef = useRef(null)
 	const [loading, setLoading] = useState(true)
 
+	const route = useRoute()
+	const { selectedParking } = route.params || {}
+
 	useEffect(() => {
 		const transformData = data => {
 			return data.map(item => ({
@@ -40,29 +44,35 @@ const MapScreen = ({ navigation }) => {
 			}))
 		}
 
-		axios
-			.get('http://localhost:8080/info') // Replace with your actual IP or API URL
-			.then(
-				response => {
-					const data = response?.data?.data
-					const status = response?.data?.status
+		const loadParkingData = async () => {
+			try {
+				const data = await fetchParkingData()
+				const transformedData = transformData(data)
+				setParkingData(transformedData)
+			} catch (error) {
+				console.error('Error loading parking data:', error)
+			} finally {
+				setLoading(false)
+			}
+		}
 
-					if (status !== 'success' || !Array.isArray(data)) {
-						console.error('Unexpected response format:', response)
-						setLoading(false)
-						return
-					}
-
-					const transformedData = transformData(data)
-					setParkingData(transformedData)
-					setLoading(false)
-				},
-				error => {
-					console.error('Error fetching data:', error)
-					setLoading(false)
-				}
-			)
+		loadParkingData()
 	}, [])
+
+	// Focus on selected parking when parameter changes
+	useEffect(() => {
+		if (selectedParking && mapViewRef.current) {
+			mapViewRef.current.animateToRegion(
+				{
+					latitude: selectedParking.location.latitude,
+					longitude: selectedParking.location.longitude,
+					latitudeDelta: 0.01,
+					longitudeDelta: 0.01
+				},
+				1000
+			)
+		}
+	}, [selectedParking])
 
 	const handleUserLocationUpdate = location => {
 		if (!location) {
@@ -84,63 +94,46 @@ const MapScreen = ({ navigation }) => {
 		}
 	}
 
-	const renderMarker = item => (
-		<Marker
-			key={item.id || Math.random()}
-			coordinate={item.location}
-			title={item.name}
-			description={`Capacity: ${item.capacity}, Free: ${item.free}`}
-		>
-			<Image
-				source={require('../../assets/icons/parking.png')}
-				style={styles.markerImage} // Updated from className to style
-			/>
-		</Marker>
-	)
-
 	if (loading) {
 		return (
-			<View style={styles.loadingContainer}>
+			<View className=" flex-1 justify-center">
 				<ActivityIndicator size="large" color="#363636" />
 			</View>
 		)
 	}
 
 	return (
-		<View style={styles.container}>
+		<View style={{ flex: 1 }}>
 			<MapViewClustering
-				style={styles.map}
-				region={INITIAL_POSITION}
+				style={StyleSheet.absoluteFillObject}
+				initialRegion={INITIAL_POSITION}
 				showsUserLocation={true}
 				ref={mapViewRef}
 			>
-				{parkingData.map(item => renderMarker(item))}
+				{parkingData.map(item => (
+					<Marker
+						key={item.id}
+						coordinate={item.location}
+						title={item.name}
+						description={`Capacity: ${item.capacity}, Free: ${item.free}`}
+					>
+						<Image
+							source={require('../../assets/icons/parking.png')}
+							className=" w-8 h-8 object-contain"
+						/>
+					</Marker>
+				))}
 			</MapViewClustering>
 
-			<View>
+			<View className=" absolute top-[650px] left-80">
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
+			</View>
+
+			<View className=" top-[250px]">
+				<ParkingPopUp></ParkingPopUp>
 			</View>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1
-	},
-	map: {
-		...StyleSheet.absoluteFillObject
-	},
-	loadingContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	markerImage: {
-		width: 32,
-		height: 32,
-		resizeMode: 'contain'
-	}
-})
 
 export default MapScreen

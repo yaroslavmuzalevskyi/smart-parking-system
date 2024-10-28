@@ -5,11 +5,11 @@
   },
   {
     "name": "Saint-Esprit",
-    "parking_free_places": "132"
+    "parking_free_places": "87"
   },
   {
     "name": "Knuedler",
-    "parking_free_places": "290"
+    "parking_free_places": "31"
   },
   {
     "name": "Monterey",
@@ -17,7 +17,7 @@
   },
   {
     "name": "Rond Point Schuman",
-    "parking_free_places": "208"
+    "parking_free_places": "89"
   },
   {
     "name": "Martyrs",
@@ -25,15 +25,15 @@
   },
   {
     "name": "Rocade",
-    "parking_free_places": "145"
+    "parking_free_places": "102"
   },
   {
     "name": "Fort Wedell",
-    "parking_free_places": "369"
+    "parking_free_places": "149"
   },
   {
     "name": "Fort Neipperg",
-    "parking_free_places": "317"
+    "parking_free_places": "30"
   },
   {
     "name": "Luxembourg Sud B",
@@ -53,7 +53,7 @@
   },
   {
     "name": "Erasme",
-    "parking_free_places": "270"
+    "parking_free_places": "157"
   },
   {
     "name": "Coque",
@@ -61,15 +61,15 @@
   },
   {
     "name": "Gare",
-    "parking_free_places": "503"
+    "parking_free_places": "207"
   },
   {
     "name": "Adenauer",
-    "parking_free_places": "393"
+    "parking_free_places": "42"
   },
   {
     "name": "Stade",
-    "parking_free_places": "394"
+    "parking_free_places": "337"
   },
   {
     "name": "Glacis",
@@ -89,11 +89,11 @@
   },
   {
     "name": "Kockelscheuer",
-    "parking_free_places": "520"
+    "parking_free_places": "358"
   },
   {
     "name": "Bouillon",
-    "parking_free_places": "2144"
+    "parking_free_places": "286"
   },
   {
     "name": "Brasserie",
@@ -101,18 +101,18 @@
   },
   {
     "name": "Nobilis",
-    "parking_free_places": "0"
+    "parking_free_places": "80"
   },
   {
     "name": "Royal-Hamilius",
-    "parking_free_places": "338"
+    "parking_free_places": "83"
   },
   {
     "name": "Stade de Luxembourg",
-    "parking_free_places": "1427"
+    "parking_free_places": "634"
   },
   {
     "name": "Campus Cents",
-    "parking_free_places": "25"
+    "parking_free_places": "24"
   }
 ]
