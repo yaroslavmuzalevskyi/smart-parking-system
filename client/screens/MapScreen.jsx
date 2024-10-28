@@ -8,11 +8,12 @@ import {
 	TouchableOpacity,
 	Animated
 } from 'react-native'
-import MapView, { Marker } from 'react-native-maps'
+import { Marker } from 'react-native-maps'
 import MapViewClustering from 'react-native-map-clustering'
-import { useRoute } from '@react-navigation/native'
 import UserLocation from '../components/UserLocation'
-import { fetchParkingData } from '../util/parkingService'
+import useParkingData from '../hooks/useParkingData'
+import usePopupAnimation from '../hooks/usePopupAnimation'
+import useUserLocation from '../hooks/useUserLocation'
 import ParkingPopUp from '../components/ParkingPopUp'
 
 const { width, height } = Dimensions.get('window')
@@ -26,100 +27,61 @@ const INITIAL_POSITION = {
 	longitudeDelta: LONGITUDE_DELTA
 }
 
-const MapScreen = ({ navigation }) => {
-	const [parkingData, setParkingData] = useState([])
-	const [userLocation, setUserLocation] = useState(null)
-	const [loading, setLoading] = useState(true)
-	const [selectedParkingSpot, setSelectedParkingSpot] = useState(null)
-	const popupAnimation = useRef(new Animated.Value(0)).current
-
-	const mapViewRef = useRef(null)
-
-	useEffect(() => {
-		const transformData = data => {
-			return data.map(item => ({
-				...item,
-				location: {
-					latitude: item.lat,
-					longitude: item.lon
-				}
-			}))
-		}
-
-		const loadParkingData = async () => {
-			try {
-				const data = await fetchParkingData()
-				const transformedData = transformData(data)
-				setParkingData(transformedData)
-			} catch (error) {
-				console.error('Error loading parking data:', error)
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		loadParkingData()
-	}, [])
-
-	useEffect(() => {
-		if (selectedParkingSpot) {
-			// Animate pop-up in
-			Animated.timing(popupAnimation, {
-				toValue: 50, // On-screen position
-				duration: 300,
-				useNativeDriver: true
-			}).start()
-		}
-	}, [selectedParkingSpot])
-
+const MapScreen = ({ navigation, route }) => {
+	const [selectedParkingSpot, setSelectedParkingSpot] = useState(
+		route.params?.selectedParkingSpot
+	)
+	const { parkingData, loading } = useParkingData()
+	const popupHeight = 700
+	const { popupAnimation, animateOut } = usePopupAnimation(
+		!!selectedParkingSpot,
+		popupHeight
+	)
 	const closePopUp = () => {
-		Animated.timing(popupAnimation, {
-			toValue: 700, // Off-screen position
-			duration: 300,
-			useNativeDriver: true
-		}).start(() => {
+		animateOut(() => {
 			setSelectedParkingSpot(null)
 		})
 	}
+	const mapViewRef = useRef(null)
+	const { userLocation, handleUserLocationUpdate } = useUserLocation()
 
-	// Focus on selected parking when parameter changes
 	useEffect(() => {
-		if (selectedParkingSpot && mapViewRef.current) {
+		if (route.params?.selectedParkingSpot) {
+			setSelectedParkingSpot(route.params.selectedParkingSpot)
+		}
+	}, [route.params])
+
+	useEffect(() => {
+		if (userLocation && mapViewRef.current) {
 			mapViewRef.current.animateToRegion(
 				{
-					latitude: selectedParkingSpot.location.latitude,
-					longitude: selectedParkingSpot.location.longitude,
-					latitudeDelta: 0.01,
-					longitudeDelta: 0.01
-				},
-				1000
-			)
-		}
-	}, [selectedParkingSpot])
-
-	const handleUserLocationUpdate = location => {
-		if (!location) {
-			console.log('User location is not available.')
-			return
-		}
-
-		setUserLocation(location)
-		if (mapViewRef.current) {
-			mapViewRef.current.animateToRegion(
-				{
-					latitude: location.latitude,
-					longitude: location.longitude,
+					latitude: userLocation.latitude,
+					longitude: userLocation.longitude,
 					latitudeDelta: 0.05,
 					longitudeDelta: 0.05
 				},
 				1000
 			)
 		}
-	}
+	}, [userLocation])
+
+	useEffect(() => {
+		if (selectedParkingSpot && mapViewRef.current) {
+			mapViewRef.current.animateToRegion(
+				{
+					latitude: selectedParkingSpot.location.latitude,
+					longitude: selectedParkingSpot.location.longitude,
+					latitudeDelta: 0.05,
+					longitudeDelta: 0.05
+				},
+				1000
+			)
+		}
+	}, [selectedParkingSpot])
 
 	if (loading) {
 		return (
-			<View className=" flex-1 justify-center">
+			<View className="flex-1 justify-center">
 				<ActivityIndicator size="large" color="#363636" />
 			</View>
 		)
@@ -141,23 +103,23 @@ const MapScreen = ({ navigation }) => {
 					>
 						<Image
 							source={require('../../assets/icons/parking.png')}
-							className=" w-8 h-8 object-contain"
+							className="w-8 h-8 object-contain"
 						/>
 					</Marker>
 				))}
 			</MapViewClustering>
 
-			<View className=" absolute top-[650px] left-80">
+			<View className="absolute top-[650px] left-80">
 				<UserLocation onLocationUpdate={handleUserLocationUpdate} />
 			</View>
 			{selectedParkingSpot && (
 				<>
 					<TouchableOpacity
-						className=" absolute top-0 left-0 right-0 bottom-0"
+						className="absolute top-0 left-0 right-0 bottom-0"
 						onPress={closePopUp}
 					/>
 					<Animated.View
-						className=" absolute bottom-0 w-full"
+						className="absolute bottom-0 w-full"
 						style={[
 							{
 								transform: [{ translateY: popupAnimation }]

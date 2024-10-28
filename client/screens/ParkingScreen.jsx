@@ -4,42 +4,15 @@ import {
 	Text,
 	ScrollView,
 	ActivityIndicator,
-	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+	Alert
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { fetchParkingData } from '../util/parkingService'
+import useParkingData from '../hooks/useParkingData'
 
 const ParkingScreen = () => {
-	const [parkingData, setParkingData] = useState([])
-	const [loading, setLoading] = useState(true)
 	const navigation = useNavigation()
-
-	useEffect(() => {
-		const transformData = data => {
-			return data.map(item => ({
-				...item,
-				location: {
-					latitude: item.lat,
-					longitude: item.lon
-				}
-			}))
-		}
-
-		const loadParkingData = async () => {
-			try {
-				const data = await fetchParkingData()
-				const transformedData = transformData(data)
-				setParkingData(transformedData)
-			} catch (error) {
-				console.error('Error loading parking data:', error)
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		loadParkingData()
-	}, [])
+	const { parkingData, loading } = useParkingData()
 
 	if (loading) {
 		return (
@@ -56,7 +29,9 @@ const ParkingScreen = () => {
 					<TouchableOpacity
 						key={item.id}
 						onPress={() =>
-							navigation.navigate('Map', { selectedParking: item })
+							navigation.navigate('Map', {
+								selectedParkingSpot: item
+							})
 						}
 					>
 						<View className=" py-3 border-b-2 border-white">
