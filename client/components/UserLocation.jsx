@@ -47,7 +47,7 @@ const UserLocation = ({ onLocationUpdate }) => {
 				<ActivityIndicator color="#fff" />
 			) : (
 				<Image
-					className=" w-8 h-8"
+					className=" w-8 h-8 "
 					source={require('../../assets/icons/target.png')}
 				/>
 			)}

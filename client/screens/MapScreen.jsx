@@ -127,9 +127,9 @@ const MapScreen = ({ navigation, route }) => {
 						]}
 					>
 						<ParkingPopUp
+							key={selectedParkingSpot.id}
 							parkingData={selectedParkingSpot}
 							userLocation={userLocation}
-							selectedParking={selectedParkingSpot}
 						/>
 					</Animated.View>
 				</>

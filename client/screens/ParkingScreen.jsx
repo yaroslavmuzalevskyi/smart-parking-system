@@ -1,31 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
 	View,
 	Text,
 	ScrollView,
 	ActivityIndicator,
-	TouchableOpacity,
-	Alert
+	TouchableOpacity
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import useParkingData from '../hooks/useParkingData'
+import useDistanceMeasure from '../hooks/useDistanceMeasure'
 
 const ParkingScreen = () => {
 	const navigation = useNavigation()
-	const { parkingData, loading } = useParkingData()
+	const { parkingWithDistance, isLoading } = useDistanceMeasure()
 
-	if (loading) {
+	if (isLoading) {
 		return (
-			<View className=" flex-1 p-4">
+			<View className="flex-1 p-4 justify-center items-center">
 				<ActivityIndicator size="large" color="#363636" />
 			</View>
 		)
 	}
 
 	return (
-		<View className=" flex-1 p-4">
+		<View className="flex-1 p-4">
 			<ScrollView>
-				{parkingData.map(item => (
+				{parkingWithDistance.map(item => (
 					<TouchableOpacity
 						key={item.id}
 						onPress={() =>
@@ -34,10 +33,13 @@ const ParkingScreen = () => {
 							})
 						}
 					>
-						<View className=" py-3 border-b-2 border-white">
-							<Text className=" text-base font-bold">Name: {item.name}</Text>
-							<Text className=" text-xs text-gray-400">
+						<View className="py-3 border-b-2 border-white">
+							<Text className="text-base font-bold">Name: {item.name}</Text>
+							<Text className="text-xs text-gray-400">
 								Capacity: {item.capacity}, Free: {item.free}
+							</Text>
+							<Text className="text-xs text-gray-400">
+								Distance: {item.distance.toFixed(2)} km
 							</Text>
 						</View>
 					</TouchableOpacity>

@@ -1,11 +1,28 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity, Linking } from 'react-native'
+import {
+	View,
+	Image,
+	Text,
+	TouchableOpacity,
+	Linking,
+	Alert
+} from 'react-native'
 
-const ParkingPopUp = ({ parkingData, userLocation, selectedParking }) => {
+const ParkingPopUp = ({ parkingData, userLocation }) => {
 	const handleRoutePress = () => {
-		const url = `http://maps.apple.com/?saddr=${userLocation.latitude},${userLocation.longitude}&daddr=${selectedParking.location.latitude},${selectedParking.location.longitude}`
+		if (!userLocation || !parkingData || !parkingData.location) {
+			Alert.alert(
+				'Data not available',
+				'User location or parking data is not available yet.'
+			)
+			return
+		}
+
+		const url = `http://maps.apple.com/?saddr=${userLocation.latitude},${userLocation.longitude}&daddr=${parkingData.location.latitude},${parkingData.location.longitude}`
 		Linking.openURL(url)
 	}
+
+	console.log(userLocation)
 
 	return (
 		<View className=" w-full h-[550px] rounded-3xl bg-white">
