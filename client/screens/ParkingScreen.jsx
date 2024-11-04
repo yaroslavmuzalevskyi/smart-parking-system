@@ -26,7 +26,7 @@ const ParkingScreen = () => {
 			<ScrollView>
 				{parkingWithDistance.map(item => (
 					<TouchableOpacity
-						key={item.id}
+						key={item.id || item.name}
 						onPress={() =>
 							navigation.navigate('Map', {
 								selectedParkingSpot: item

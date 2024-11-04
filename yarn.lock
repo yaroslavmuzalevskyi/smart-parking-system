@@ -6859,6 +6859,11 @@ react-shallow-renderer@^16.15.0:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
 
+react-vector-icons@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-vector-icons/-/react-vector-icons-0.0.1.tgz#5f105a20b658bec8821b38194c5aca734702b30a"
+  integrity sha512-Glj+UVRRsnxTLFYxF5XGKMOBTvIB4K+nLkESB6dFnvnVjuz7f5pZ3e668HonNlp6dS4VvofToX1LzwZPsmruFQ==
+
 react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"

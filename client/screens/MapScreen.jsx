@@ -97,7 +97,7 @@ const MapScreen = ({ navigation, route }) => {
 			>
 				{parkingData.map(item => (
 					<Marker
-						key={item.id}
+						key={item.id || item.name}
 						coordinate={item.location}
 						onPress={() => setSelectedParkingSpot(item)}
 					>
@@ -127,7 +127,7 @@ const MapScreen = ({ navigation, route }) => {
 						]}
 					>
 						<ParkingPopUp
-							key={selectedParkingSpot.id}
+							key={selectedParkingSpot.id || selectedParkingSpot.name}
 							parkingData={selectedParkingSpot}
 							userLocation={userLocation}
 						/>

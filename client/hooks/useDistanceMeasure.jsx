@@ -66,34 +66,20 @@ const useDistanceMeasure = () => {
 		}
 
 		// Calculate distances and update the parking data
-		const updatedParkingData = parkingData.map(item => {
+		const distanceParkingData = parkingData.map(item => {
 			// Adjust property names if necessary
-			const itemLat = item.latitude || item.lat || item.coords?.latitude
-			const itemLon = item.longitude || item.lon || item.coords?.longitude
+			const toLat = item.lat
+			const toLon = item.lon
 
 			console.log(
 				'Calculating distance between:',
 				fromLat,
 				fromLon,
-				itemLat,
-				itemLon
+				toLat,
+				toLon
 			)
 
-			// Check if itemLat and itemLon are valid numbers
-			if (
-				typeof itemLat !== 'number' ||
-				typeof itemLon !== 'number' ||
-				isNaN(itemLat) ||
-				isNaN(itemLon)
-			) {
-				console.error(`Invalid coordinates for item ID ${item.id}`)
-				return {
-					...item,
-					distance: NaN
-				}
-			}
-
-			const distance = calculateDistance(fromLat, fromLon, itemLat, itemLon)
+			const distance = calculateDistance(fromLat, fromLon, toLat, toLon)
 
 			return {
 				...item,
@@ -101,15 +87,10 @@ const useDistanceMeasure = () => {
 			}
 		})
 
-		// Filter out items with NaN distance
-		const validParkingData = updatedParkingData.filter(
-			item => !isNaN(item.distance)
-		)
-
 		// Sort by distance (nearest first)
-		validParkingData.sort((a, b) => a.distance - b.distance)
+		distanceParkingData.sort((a, b) => a.distance - b.distance)
 
-		setParkingWithDistance(validParkingData)
+		setParkingWithDistance(distanceParkingData)
 	}, [loading, userLocation, parkingData])
 
 	return { parkingWithDistance, isLoading }
