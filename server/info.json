@@ -1,23 +1,23 @@
 [
   {
     "name": "Théâtre",
-    "parking_free_places": "256"
+    "parking_free_places": "252"
   },
   {
     "name": "Saint-Esprit",
-    "parking_free_places": "97"
+    "parking_free_places": "100"
   },
   {
     "name": "Knuedler",
-    "parking_free_places": "64"
+    "parking_free_places": "87"
   },
   {
     "name": "Monterey",
-    "parking_free_places": "128"
+    "parking_free_places": "120"
   },
   {
     "name": "Rond Point Schuman",
-    "parking_free_places": "1"
+    "parking_free_places": "8"
   },
   {
     "name": "Martyrs",
@@ -25,15 +25,15 @@
   },
   {
     "name": "Rocade",
-    "parking_free_places": "70"
+    "parking_free_places": "77"
   },
   {
     "name": "Fort Wedell",
-    "parking_free_places": "196"
+    "parking_free_places": "206"
   },
   {
     "name": "Fort Neipperg",
-    "parking_free_places": "176"
+    "parking_free_places": "165"
   },
   {
     "name": "Luxembourg Sud B",
@@ -53,7 +53,7 @@
   },
   {
     "name": "Erasme",
-    "parking_free_places": "53"
+    "parking_free_places": "57"
   },
   {
     "name": "Coque",
@@ -61,7 +61,7 @@
   },
   {
     "name": "Gare",
-    "parking_free_places": "111"
+    "parking_free_places": "135"
   },
   {
     "name": "Adenauer",
@@ -69,7 +69,7 @@
   },
   {
     "name": "Stade",
-    "parking_free_places": "300"
+    "parking_free_places": "299"
   },
   {
     "name": "Glacis",
@@ -89,11 +89,11 @@
   },
   {
     "name": "Kockelscheuer",
-    "parking_free_places": "365"
+    "parking_free_places": "368"
   },
   {
     "name": "Bouillon",
-    "parking_free_places": "82"
+    "parking_free_places": "98"
   },
   {
     "name": "Brasserie",
@@ -101,18 +101,18 @@
   },
   {
     "name": "Nobilis",
-    "parking_free_places": "71"
+    "parking_free_places": "72"
   },
   {
     "name": "Royal-Hamilius",
-    "parking_free_places": "100"
+    "parking_free_places": "132"
   },
   {
     "name": "Stade de Luxembourg",
-    "parking_free_places": "424"
+    "parking_free_places": "435"
   },
   {
     "name": "Campus Cents",
-    "parking_free_places": "12"
+    "parking_free_places": "15"
   }
 ]

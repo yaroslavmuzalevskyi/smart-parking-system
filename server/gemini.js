@@ -1,13 +1,15 @@
 import express from 'express'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import axios from 'axios'
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = express()
 app.use(express.json())
 
 const PORT = 8082
 
-const genAI = new GoogleGenerativeAI('AIzaSyBRxSzg0aV3pDYCPL9kMlaU0tfw9LFmLxg')
+const genAI = new GoogleGenerativeAI(process.env.EXPO_PUBLIC_GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
 let parkingData = null
