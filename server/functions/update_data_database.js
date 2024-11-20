@@ -27,4 +27,4 @@ async function update_data_database(name, free_places, parkingModule) {
 	}
 }
 
-module.exports = update_data_database
+export default update_data_database

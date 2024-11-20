@@ -39,4 +39,4 @@ async function insert_data_database(
 	}
 }
 
-module.exports = insert_data_database
+export default insert_data_database

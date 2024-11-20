@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import useParkingData from './useParkingData'
 import { Alert } from 'react-native'
-import * as Location from 'expo-location' // Import the Location module
+import * as Location from 'expo-location'
 
 const useDistanceMeasure = () => {
 	const { parkingData, loading } = useParkingData()
@@ -25,7 +25,7 @@ const useDistanceMeasure = () => {
 					return
 				}
 
-				setUserLocation(location.coords) // Update state with location
+				setUserLocation(location.coords)
 			} catch (error) {
 				console.error('Error fetching location:', error)
 				Alert.alert('Location Error', 'Unable to fetch location')
@@ -71,14 +71,6 @@ const useDistanceMeasure = () => {
 			const toLat = item.lat
 			const toLon = item.lon
 
-			console.log(
-				'Calculating distance between:',
-				fromLat,
-				fromLon,
-				toLat,
-				toLon
-			)
-
 			const distance = calculateDistance(fromLat, fromLon, toLat, toLon)
 
 			return {
@@ -93,7 +85,7 @@ const useDistanceMeasure = () => {
 		setParkingWithDistance(distanceParkingData)
 	}, [loading, userLocation, parkingData])
 
-	return { parkingWithDistance, isLoading }
+	return { parkingWithDistance, isLoading, userLocation }
 }
 
 export default useDistanceMeasure

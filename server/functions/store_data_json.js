@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 function store_data_json(data) {
 	return new Promise((resolve, reject) => {
@@ -21,4 +21,4 @@ function store_data_json(data) {
 	})
 }
 
-module.exports = store_data_json
+export default store_data_json

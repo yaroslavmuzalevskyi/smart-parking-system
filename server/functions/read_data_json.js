@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 function read_data_json() {
 	return new Promise((resolve, reject) => {
@@ -13,4 +13,4 @@ function read_data_json() {
 	})
 }
 
-module.exports = read_data_json
+export default read_data_json

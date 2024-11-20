@@ -19,4 +19,4 @@ function clear_database(parkingModule) {
 	})
 }
 
-module.exports = clear_database
+export default clear_database

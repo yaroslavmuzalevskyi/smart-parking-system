@@ -1,5 +1,5 @@
-const axios = require('axios')
-const cheerio = require('cheerio')
+import axios from 'axios'
+import * as cheerio from 'cheerio'
 
 async function get_data(url) {
 	try {
@@ -45,4 +45,4 @@ async function get_data(url) {
 	}
 }
 
-module.exports = get_data
+export default get_data

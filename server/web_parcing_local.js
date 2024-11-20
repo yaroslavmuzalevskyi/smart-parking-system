@@ -1,16 +1,18 @@
-const dotenv = require('dotenv')
-const moment = require('moment')
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
+// Import statements using ES Modules syntax
+import dotenv from 'dotenv'
+// import moment from 'moment';
+import express from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
 
-const fetch_database = require('./functions/fetch_database')
-const get_data = require('./functions/get_data.js')
-const store_data_json = require('./functions/store_data_json.js')
-const read_data_json = require('./functions/read_data_json.js')
-const clear_database = require('./functions/clear_database.js')
-const insert_data_database = require('./functions/insert_data_database.js')
-const update_data_database = require('./functions/update_data_database.js')
+// Import local modules using ES Modules syntax
+// import fetch_database from './functions/fetch_database.js';
+import get_data from './functions/get_data.js'
+import store_data_json from './functions/store_data_json.js'
+import read_data_json from './functions/read_data_json.js'
+import clear_database from './functions/clear_database.js'
+import insert_data_database from './functions/insert_data_database.js'
+import update_data_database from './functions/update_data_database.js'
 
 const app = express()
 app.use(cors())
@@ -25,7 +27,8 @@ const parkingSchema = mongoose.Schema({
 	free: Number,
 	dateTime: Number,
 	lat: Number,
-	lon: Number
+	lon: Number,
+	distance: Number
 })
 
 const parkingModule = mongoose.model('parkings', parkingSchema)

@@ -9,6 +9,7 @@ import IonIcons from 'react-native-vector-icons/Ionicons'
 import MapScreen from '../client/screens/MapScreen'
 import ParkingScreen from '../client/screens/ParkingScreen'
 import SettingsScreen from '../client/screens/SettingsScreen'
+import AIScreen from '../client/screens/AIScreen'
 import CustomDrawer from '../client/components/CustomDrawer'
 
 const Drawer = createDrawerNavigator()
@@ -35,6 +36,7 @@ export default function App() {
 					<Drawer.Screen name="Map" component={MapScreen} />
 					<Drawer.Screen name="Parkings" component={ParkingScreen} />
 					<Drawer.Screen name="Settings" component={SettingsScreen} />
+					<Drawer.Screen name="AI" component={AIScreen} />
 				</Drawer.Navigator>
 			</NavigationContainer>
 		</SafeAreaProvider>
