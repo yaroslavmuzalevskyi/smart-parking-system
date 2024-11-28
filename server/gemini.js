@@ -82,7 +82,7 @@ app.post('/chat', async (req, res) => {
 			})
 			.join('\n')
 
-		const modifiedPrompt = `Write a short answer (max 150 words). Based on the user's location, the nearest parking spots are:\n${parkingSpotsString}\n${prompt}`
+		const modifiedPrompt = `Write a short answer (max 150 words). Based on the user's location, the parking spots are:\n${parkingSpotsString}\n${prompt}`
 		const result = await model.generateContent(modifiedPrompt)
 
 		res.status(200).json({ response: result.response.text() })
